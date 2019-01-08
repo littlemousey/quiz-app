@@ -17,11 +17,11 @@ class App extends Component {
     this.setState({ name: string });
   };
 
-  processScore = (answerRight) => {
+  processScore = (answerRight, questionsLeft) => {
     this.setState((prevState) => ({
       questionsRight: answerRight ? prevState.questionsRight + 1 : prevState.questionsRight,
-      questionsWrong: !answerRight ? prevState.questionsWrong + 1 : prevState.questionsWrong,
-      questionsLeft: 10 - (prevState.questionsRight + prevState.questionsWrong),
+      questionsWrong: answerRight ? prevState.questionsWrong : prevState.questionsWrong + 1,
+      questionsLeft,
     }));
   };
 
@@ -31,7 +31,7 @@ class App extends Component {
         <Header name={this.state.name} />
         {!this.state.name && <RegisterName setName={(string) => this.setName(string)} />}
         {this.state.name && <Game onSubmitAnswer={this.processScore} />}
-        {this.state.name && <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.state.questionsLeft} />}
+        {this.state.name && <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.props.questionsLeft} />}
       </div>
     );
   }

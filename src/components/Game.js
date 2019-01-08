@@ -6,19 +6,30 @@ import Question from './Question';
 
 class Game extends Component {
   state = {
-    questions: data.results,
-    currentQuestion: generateRandomNumber(0, data.results.length),
+    questions: this.retrieveQuestionsArray(data.results, 10),
+    currentQuestion: generateRandomNumber(0, 10),
     loading: true,
+    questionsLeft: 10,
   };
+
+  // move to utils folder
+  retrieveQuestionsArray(array, arrayLength) {
+    const shuffled = array.sort(() => .5 - Math.random());
+    let selected =shuffled.slice(0, arrayLength);
+    return selected;
+  }
 
   componentDidMount() {
     this.setState({ loading: false });
   }
 
   onSubmitAnswer = (answer) => {
-    console.log(answer);
-    this.setState((prevState) => ({ currentQuestion: generateRandomNumber(0, prevState.questions.length - 1) }));
-    this.props.onSubmitAnswer(answer);
+    this.setState((prevState) => ({
+      questions: prevState.questions.filter((question, index) => index !== prevState.currentQuestion),
+      currentQuestion: generateRandomNumber(0, prevState.questions.length - 2),
+      questionsLeft: prevState.questions.length -1,
+    }));
+    this.props.onSubmitAnswer(answer, this.state.questionsLeft);
   };
 
   render() {

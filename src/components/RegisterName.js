@@ -22,6 +22,7 @@ class RegisterName extends Component {
       <form onSubmit={this.handleSubmit}>
         <label>
           What is your name?
+          <br/>
           <input type="text" name="registration" value={this.state.value} onChange={this.handleChange} />
         </label>
         <input type="submit" value="Submit" />
