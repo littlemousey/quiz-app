@@ -3,20 +3,14 @@ import PropTypes from 'prop-types';
 import data from '../questions';
 import generateRandomNumber from '../utils/random';
 import Question from './Question';
+import createNewRandomizedArray from '../utils/randomizedArray';
 
 class Game extends Component {
   state = {
-    questions: this.retrieveQuestionsArray(data.results, 10),
+    questions: createNewRandomizedArray(data.results, 10),
     currentQuestion: generateRandomNumber(0, 10),
     loading: true,
   };
-
-  // move to utils folder
-  retrieveQuestionsArray(array, arrayLength) {
-    const shuffled = array.sort(() => .5 - Math.random());
-    let selected =shuffled.slice(0, arrayLength);
-    return selected;
-  }
 
   componentDidMount() {
     this.setState({ loading: false });
@@ -29,7 +23,7 @@ class Game extends Component {
       currentQuestion: generateRandomNumber(0, prevState.questions.length - 2),
     }), () => this.props.onSubmitAnswer(answer, this.state.questions.length));
   };
-  
+
   render() {
     if (!this.state.loading && Object.keys(this.state.questions).length > 0) {
       return (
