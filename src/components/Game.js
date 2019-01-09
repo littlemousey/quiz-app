@@ -1,31 +1,38 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import data from '../questions';
 import generateRandomNumber from '../utils/random';
 import Question from './Question';
 import createNewRandomizedArray from '../utils/randomizedArray';
+import triviaService from '../services/getQuestionsData';
+import gifImage from '../img/loading.gif'
 
 class Game extends Component {
-  state = {
-    questions: createNewRandomizedArray(data.results, 10),
-    currentQuestion: generateRandomNumber(0, 10),
-    loading: true,
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      questions: createNewRandomizedArray([], 10),
+      currentQuestion: generateRandomNumber(0, 10),
+      loading: true,
+    };
+
+    triviaService.getQuestions().then((opentdbData) =>{
+      this.setState({questions: createNewRandomizedArray(opentdbData.results, 10)})
+    });
+  }
 
   componentDidMount() {
     this.setState({ loading: false });
-    console.log('help', this.state.questions);
   }
   
   onSubmitAnswer = (answer) => {
     this.setState((prevState) => ({
       questions: prevState.questions.filter((question, index) => index !== prevState.currentQuestion),
       currentQuestion: generateRandomNumber(0, prevState.questions.length - 2),
-    }), () => this.props.onSubmitAnswer(answer, this.state.questions.length));
+    }), () => this.props.onSubmitAnswer(answer, this.state.questions.length - 1));
   };
 
   render() {
-    if (!this.state.loading && Object.keys(this.state.questions).length > 0) {
+    if (!this.state.loading && this.state.questions.length > 0) {
       return (
         <div>
           <h3>Question</h3>
@@ -33,7 +40,13 @@ class Game extends Component {
         </div>
       );
     }
-    return <div> loading...</div>;
+    return <div>
+      <img className="loading"
+     src={gifImage}
+     width="100px"
+     height="100px"
+     alt="loading..." />
+    </div>;
   }
 }
 

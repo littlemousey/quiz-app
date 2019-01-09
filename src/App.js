@@ -3,6 +3,7 @@ import RegisterName from './components/RegisterName';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Game from './components/Game';
+import Results from './components/Results';
 import './App.css';
 
 class App extends Component {
@@ -10,7 +11,7 @@ class App extends Component {
     name: '',
     questionsRight: 0,
     questionsWrong: 0,
-    questionsLeft: 10
+    questionsLeft: 9
   };
 
   setName = (string) => {
@@ -30,8 +31,9 @@ class App extends Component {
       <div className="App">
         <Header name={this.state.name} />
         {!this.state.name && <RegisterName setName={(string) => this.setName(string)} />}
-        {this.state.name && <Game onSubmitAnswer={this.processScore} />}
-        {this.state.name && <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.state.questionsLeft} />}
+        {this.state.name && this.state.questionsLeft > -1 && <Game onSubmitAnswer={this.processScore} />}
+        {this.state.name && this.state.questionsLeft < 0 && <Results/>}
+        {this.state.name && this.state.questionsLeft > -1 && <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.state.questionsLeft} />}
       </div>
     );
   }

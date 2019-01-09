@@ -11,7 +11,6 @@ class Question extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props.questionData);
   }
 
   handleOptionChange = (changeEvent) => {
@@ -32,11 +31,20 @@ class Question extends Component {
     );
   };
 
+  decodeQuestion = (data) => {
+    return data
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'");
+  }
+
   renderQuestion = (question) => {
     if (question.type === 'boolean') {
       return (
         <div>
-          <p>{question.question}</p>
+          <p>{this.decodeQuestion(question.question)}</p>
           <form onSubmit={this.handleSubmit}>
             <label htmlFor="True">
               True
@@ -69,7 +77,7 @@ class Question extends Component {
       return (
         <form onSubmit={this.handleSubmit}>
           <label>
-            {question.question}
+          {this.decodeQuestion(question.question)}
             <select value={this.state.value} onChange={this.handleChange}>
               {this.createOption(question)}
             </select>
