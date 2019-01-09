@@ -9,7 +9,6 @@ class Game extends Component {
     questions: this.retrieveQuestionsArray(data.results, 10),
     currentQuestion: generateRandomNumber(0, 10),
     loading: true,
-    questionsLeft: 10,
   };
 
   // move to utils folder
@@ -21,17 +20,16 @@ class Game extends Component {
 
   componentDidMount() {
     this.setState({ loading: false });
+    console.log('help', this.state.questions);
   }
-
+  
   onSubmitAnswer = (answer) => {
     this.setState((prevState) => ({
       questions: prevState.questions.filter((question, index) => index !== prevState.currentQuestion),
       currentQuestion: generateRandomNumber(0, prevState.questions.length - 2),
-      questionsLeft: prevState.questions.length -1,
-    }));
-    this.props.onSubmitAnswer(answer, this.state.questionsLeft);
+    }), () => this.props.onSubmitAnswer(answer, this.state.questions.length));
   };
-
+  
   render() {
     if (!this.state.loading && Object.keys(this.state.questions).length > 0) {
       return (

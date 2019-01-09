@@ -10,7 +10,7 @@ class App extends Component {
     name: '',
     questionsRight: 0,
     questionsWrong: 0,
-    questionsLeft: 10,
+    questionsLeft: 10
   };
 
   setName = (string) => {
@@ -31,7 +31,7 @@ class App extends Component {
         <Header name={this.state.name} />
         {!this.state.name && <RegisterName setName={(string) => this.setName(string)} />}
         {this.state.name && <Game onSubmitAnswer={this.processScore} />}
-        {this.state.name && <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.props.questionsLeft} />}
+        {this.state.name && <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.state.questionsLeft} />}
       </div>
     );
   }
