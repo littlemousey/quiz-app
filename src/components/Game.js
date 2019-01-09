@@ -25,10 +25,21 @@ class Game extends Component {
   }
   
   onSubmitAnswer = (answer) => {
+    let answeredQuestion;
+    const getNewQuestions = (prevState) => {
+      return prevState.questions.filter((question, index) => {
+        if(index !== prevState.currentQuestion){
+          return true
+        }else{
+          answeredQuestion = question;
+          return false
+        }
+      })
+    } 
     this.setState((prevState) => ({
-      questions: prevState.questions.filter((question, index) => index !== prevState.currentQuestion),
+      questions: getNewQuestions(prevState),
       currentQuestion: generateRandomNumber(0, prevState.questions.length - 2),
-    }), () => this.props.onSubmitAnswer(answer, this.state.questions.length - 1));
+    }), () => this.props.onSubmitAnswer(answer, this.state.questions.length - 1, answeredQuestion ));
   };
 
   render() {

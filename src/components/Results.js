@@ -1,8 +1,10 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React from 'react';
 
-const Results = () => (
+const Results = ({questionsRight}) => (
   <div>
-    <span>Your score</span>
+    <h3>That was it!</h3>
+    <p>Amount of questions you answered right: {questionsRight}</p>
   </div>
 );
 

@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import shuffle from '../utils/shuffle';
+import cleanupText from '../utils/cleanText';
 
 class Question extends Component {
   state = {
@@ -31,20 +32,11 @@ class Question extends Component {
     );
   };
 
-  decodeQuestion = (data) => {
-    return data
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#039;/g, "'");
-  }
-
   renderQuestion = (question) => {
     if (question.type === 'boolean') {
       return (
         <div>
-          <p>{this.decodeQuestion(question.question)}</p>
+          <p>{cleanupText(question.question)}</p>
           <form onSubmit={this.handleSubmit}>
             <label htmlFor="True">
               True
@@ -77,7 +69,7 @@ class Question extends Component {
       return (
         <form onSubmit={this.handleSubmit}>
           <label>
-          {this.decodeQuestion(question.question)}
+          {cleanupText(question.question)}
             <select value={this.state.value} onChange={this.handleChange}>
               {this.createOption(question)}
             </select>
