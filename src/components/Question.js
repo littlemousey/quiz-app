@@ -4,15 +4,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import shuffle from '../utils/shuffle';
 import cleanupText from '../utils/cleanText';
+import BooleanChoice from './BooleanChoice';
 
 class Question extends Component {
   state = {
     booleanOption: 'True',
     multivalueOption: '',
   };
-
-  componentDidMount() {
-  }
 
   handleOptionChange = (changeEvent) => {
     this.setState({
@@ -38,28 +36,8 @@ class Question extends Component {
         <div>
           <p>{cleanupText(question.question)}</p>
           <form onSubmit={this.handleSubmit}>
-            <label htmlFor="True">
-              True
-              <input
-                type="radio"
-                name="true"
-                value="True"
-                checked={this.state.booleanOption === 'True'}
-                onChange={this.handleOptionChange}
-              />
-            </label>
-
-            <label htmlFor="False">
-              False
-              <input
-                type="radio"
-                name="false"
-                value="False"
-                checked={this.state.booleanOption === 'False'}
-                onChange={this.handleOptionChange}
-              />
-            </label>
-
+          <BooleanChoice value={this.state.booleanOption} label="True" type="radio" onChange={this.handleOptionChange} />
+          <BooleanChoice value={this.state.booleanOption} label="False" type="radio" onChange={this.handleOptionChange} />
             <button type="submit">Submit answer</button>
           </form>
         </div>
@@ -70,8 +48,8 @@ class Question extends Component {
         <form onSubmit={this.handleSubmit}>
           <label>
           {cleanupText(question.question)}
-            <select value={this.state.value} onChange={this.handleChange}>
-              {this.createOption(question)}
+            <select value={this.state.multivalueOption} onChange={this.handleChange}>
+              {this.createOptions(question)}
             </select>
           </label>
           <input type="submit" value="Submit" />
@@ -81,7 +59,7 @@ class Question extends Component {
     return '';
   };
 
-  createOption(object) {
+  createOptions(object) {
     const output = [];
     output.push(
       <option key={object.correct_answer} value={object.correct_answer}>
