@@ -10,10 +10,15 @@ class Question extends Component {
   state = {
     booleanOption: 'true',
     multivalueOption: '',
+    counter: 2, // when the counter hits 0, we want to trigger handleSubmit();
   };
 
   componentDidMount() {
-    // console.log(this.props.questionData);
+    this.timerId = setInterval(this.updateCounter, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId);
   }
 
   handleOptionChange = (changeEvent) => {
@@ -29,12 +34,29 @@ class Question extends Component {
   };
 
   handleSubmit = (event) => {
-    event.preventDefault();
-
+    if (event) {
+      event.preventDefault();
+    }
     if (this.props.questionData.type === 'multiple') {
       this.props.onSubmitAnswer(this.state.multivalueOption);
     } else if (this.props.questionData.type === 'boolean') {
       this.props.onSubmitAnswer(this.state.booleanOption);
+    }
+  };
+
+  stopCounter = () => {
+    console.log('stop!');
+    clearInterval(this.timerID);
+  };
+
+  updateCounter = () => {
+    if (this.state.counter === 0) {
+      this.stopCounter();
+      this.handleSubmit(false);
+    } else {
+      this.setState((prevState) => ({
+        counter: prevState.counter - 1,
+      }));
     }
   };
 
@@ -79,7 +101,7 @@ class Question extends Component {
     return '';
   };
 
-  createOptions(object) {
+  createOptions = (object) => {
     const output = [];
     output.push(
       <option key={object.correct_answer} value={object.correct_answer}>
@@ -94,10 +116,15 @@ class Question extends Component {
       );
     });
     return shuffle(output);
-  }
+  };
 
   render() {
-    return <div>{this.renderQuestion(this.props.questionData)}</div>;
+    return (
+      <div>
+        {this.state.counter}
+        <div>{this.renderQuestion(this.props.questionData)}</div>
+      </div>
+    );
   }
 }
 
