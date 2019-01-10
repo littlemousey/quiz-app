@@ -47,7 +47,7 @@
     "max-len": [
       "error",
       {
-        "code": 120
+        "code": 160
       }
     ],
     "no-param-reassign": 0,

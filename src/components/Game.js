@@ -12,6 +12,7 @@ class Game extends Component {
     this.state = {
       questions: createNewRandomizedArray([], 10),
       currentQuestion: generateRandomNumber(0, 10),
+      answeredQuestions: [],
       loading: true,
     };
 
@@ -25,13 +26,22 @@ class Game extends Component {
   }
 
   onSubmitAnswer = (answer) => {
-    let answeredQuestion;
+    const isAnsweredCorrect = this.state.questions[this.state.currentQuestion].correct_answer === answer;
+    const recordedQuestion = {
+      question: this.state.questions[this.state.currentQuestion].question,
+      correctAnswer: this.state.questions[this.state.currentQuestion].correct_answer,
+      userAnswer: answer,
+    };
+
+    this.setState((prevState) => ({
+      answeredQuestions: [...prevState.answeredQuestions, recordedQuestion],
+    }));
+
     const getNewQuestions = (prevState) =>
       prevState.questions.filter((question, index) => {
         if (index !== prevState.currentQuestion) {
           return true;
         }
-        answeredQuestion = question;
         return false;
       });
     this.setState(
@@ -39,7 +49,7 @@ class Game extends Component {
         questions: getNewQuestions(prevState),
         currentQuestion: generateRandomNumber(0, prevState.questions.length - 2),
       }),
-      () => this.props.onSubmitAnswer(answer, this.state.questions.length - 1, answeredQuestion)
+      () => this.props.onSubmitAnswer(isAnsweredCorrect, this.state.questions.length - 1, this.state.answeredQuestions)
     );
   };
 

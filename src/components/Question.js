@@ -8,7 +8,7 @@ import BooleanChoice from './BooleanChoice';
 
 class Question extends Component {
   state = {
-    booleanOption: 'True',
+    booleanOption: 'true',
     multivalueOption: '',
   };
 
@@ -17,21 +17,25 @@ class Question extends Component {
   }
 
   handleOptionChange = (changeEvent) => {
-    this.setState({
-      booleanOption: changeEvent.target.value,
-    });
-  };
-
-  handleChange = (event) => {
-    this.setState({ multivalueOption: event.target.value });
+    if (this.props.questionData.type === 'multiple') {
+      this.setState({
+        multivalueOption: changeEvent.target.value,
+      });
+    } else if (this.props.questionData.type === 'boolean') {
+      this.setState({
+        booleanOption: changeEvent.target.value,
+      });
+    }
   };
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.props.onSubmitAnswer(
-      this.props.questionData.correct_answer === this.state.multivalueOption ||
-        this.props.questionData.correct_answer === this.state.booleanOption
-    );
+
+    if (this.props.questionData.type === 'multiple') {
+      this.props.onSubmitAnswer(this.state.multivalueOption);
+    } else if (this.props.questionData.type === 'boolean') {
+      this.props.onSubmitAnswer(this.state.booleanOption);
+    }
   };
 
   renderQuestion = (question) => {
@@ -41,14 +45,16 @@ class Question extends Component {
           <p>{cleanupText(question.question)}</p>
           <form onSubmit={this.handleSubmit}>
             <BooleanChoice
-              value={this.state.booleanOption}
+              value
+              checked={this.state.booleanOption === 'true'}
               label="True"
               type="radio"
               onChange={this.handleOptionChange}
             />
             <BooleanChoice
-              value={this.state.booleanOption}
+              value={false}
               label="False"
+              checked={this.state.booleanOption === 'false'}
               type="radio"
               onChange={this.handleOptionChange}
             />
@@ -62,7 +68,7 @@ class Question extends Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             {cleanupText(question.question)}
-            <select value={this.state.multivalueOption} onChange={this.handleChange}>
+            <select value={this.state.multivalueOption} onChange={this.handleOptionChange}>
               {this.createOptions(question)}
             </select>
           </label>
