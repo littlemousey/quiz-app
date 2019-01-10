@@ -12,6 +12,10 @@ class Question extends Component {
     multivalueOption: '',
   };
 
+  componentDidMount() {
+    // console.log(this.props.questionData);
+  }
+
   handleOptionChange = (changeEvent) => {
     this.setState({
       booleanOption: changeEvent.target.value,
@@ -26,7 +30,7 @@ class Question extends Component {
     event.preventDefault();
     this.props.onSubmitAnswer(
       this.props.questionData.correct_answer === this.state.multivalueOption ||
-        this.props.questionData.correct_answer === this.state.booleanOption,
+        this.props.questionData.correct_answer === this.state.booleanOption
     );
   };
 
@@ -36,8 +40,18 @@ class Question extends Component {
         <div>
           <p>{cleanupText(question.question)}</p>
           <form onSubmit={this.handleSubmit}>
-          <BooleanChoice value={this.state.booleanOption} label="True" type="radio" onChange={this.handleOptionChange} />
-          <BooleanChoice value={this.state.booleanOption} label="False" type="radio" onChange={this.handleOptionChange} />
+            <BooleanChoice
+              value={this.state.booleanOption}
+              label="True"
+              type="radio"
+              onChange={this.handleOptionChange}
+            />
+            <BooleanChoice
+              value={this.state.booleanOption}
+              label="False"
+              type="radio"
+              onChange={this.handleOptionChange}
+            />
             <button type="submit">Submit answer</button>
           </form>
         </div>
@@ -47,7 +61,7 @@ class Question extends Component {
       return (
         <form onSubmit={this.handleSubmit}>
           <label>
-          {cleanupText(question.question)}
+            {cleanupText(question.question)}
             <select value={this.state.multivalueOption} onChange={this.handleChange}>
               {this.createOptions(question)}
             </select>
@@ -64,13 +78,13 @@ class Question extends Component {
     output.push(
       <option key={object.correct_answer} value={object.correct_answer}>
         {object.correct_answer}
-      </option>,
+      </option>
     );
     object.incorrect_answers.forEach((answer) => {
       output.push(
         <option key={`${answer}_${answer.id}`} value={answer}>
           {answer}
-        </option>,
+        </option>
       );
     });
     return shuffle(output);

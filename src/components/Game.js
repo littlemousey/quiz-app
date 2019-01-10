@@ -4,10 +4,10 @@ import generateRandomNumber from '../utils/random';
 import Question from './Question';
 import createNewRandomizedArray from '../utils/randomizedArray';
 import triviaService from '../services/getQuestionsData';
-import gifImage from '../img/loading.gif'
+import gifImage from '../img/loading.gif';
 
 class Game extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       questions: createNewRandomizedArray([], 10),
@@ -15,31 +15,32 @@ class Game extends Component {
       loading: true,
     };
 
-    triviaService.getQuestions().then((opentdbData) =>{
-      this.setState({questions: createNewRandomizedArray(opentdbData.results, 10)})
+    triviaService.getQuestions().then((opentdbData) => {
+      this.setState({ questions: createNewRandomizedArray(opentdbData.results, 10) });
     });
   }
 
   componentDidMount() {
     this.setState({ loading: false });
   }
-  
+
   onSubmitAnswer = (answer) => {
     let answeredQuestion;
-    const getNewQuestions = (prevState) => {
-      return prevState.questions.filter((question, index) => {
-        if(index !== prevState.currentQuestion){
-          return true
-        }else{
-          answeredQuestion = question;
-          return false
+    const getNewQuestions = (prevState) =>
+      prevState.questions.filter((question, index) => {
+        if (index !== prevState.currentQuestion) {
+          return true;
         }
-      })
-    } 
-    this.setState((prevState) => ({
-      questions: getNewQuestions(prevState),
-      currentQuestion: generateRandomNumber(0, prevState.questions.length - 2),
-    }), () => this.props.onSubmitAnswer(answer, this.state.questions.length - 1, answeredQuestion ));
+        answeredQuestion = question;
+        return false;
+      });
+    this.setState(
+      (prevState) => ({
+        questions: getNewQuestions(prevState),
+        currentQuestion: generateRandomNumber(0, prevState.questions.length - 2),
+      }),
+      () => this.props.onSubmitAnswer(answer, this.state.questions.length - 1, answeredQuestion)
+    );
   };
 
   render() {
@@ -47,17 +48,18 @@ class Game extends Component {
       return (
         <div>
           <h3>Question</h3>
-          <Question onSubmitAnswer={this.onSubmitAnswer} questionData={this.state.questions[this.state.currentQuestion]} />
+          <Question
+            onSubmitAnswer={this.onSubmitAnswer}
+            questionData={this.state.questions[this.state.currentQuestion]}
+          />
         </div>
       );
     }
-    return <div>
-      <img className="loading"
-     src={gifImage}
-     width="100px"
-     height="100px"
-     alt="loading..." />
-    </div>;
+    return (
+      <div>
+        <img className="loading" src={gifImage} width="100px" height="100px" alt="loading..." />
+      </div>
+    );
   }
 }
 
