@@ -10,13 +10,41 @@ class Question extends Component {
   state = {
     booleanOption: 'true',
     multivalueOption: '',
+    counter: 5,
   };
 
   componentDidMount() {
+    this.interval = setInterval(() => this.handleTimerTick(), 1000);
   }
 
   componentWillUnmount() {
+    clearInterval(this.interval);
   }
+
+  handleTimerTick = () => {
+    if (this.state.counter === 0) {
+      console.log('hit zero!');
+      this.stopTimer();
+    }
+    console.log(this.state.counter);
+    this.setState((prevState) => ({
+      counter: prevState.counter - 1,
+    }));
+  };
+
+  stopTimer = () => {
+    console.log('Timer Stopping');
+    clearInterval(this.interval);
+    this.handleSubmit(false);
+  };
+
+  restartTimer = () => {
+    this.setState(() => ({
+      counter: 5,
+    }));
+    clearInterval(this.interval);
+    this.interval = setInterval(() => this.handleTimerTick(), 1000);
+  };
 
   handleOptionChange = (changeEvent) => {
     if (this.props.questionData.type === 'multiple') {
@@ -31,6 +59,10 @@ class Question extends Component {
   };
 
   handleSubmit = (event) => {
+    console.log('handleSubmit! yay! 😄  😜');
+
+    // reset counter back to initial amount
+
     if (event) {
       event.preventDefault();
     }
@@ -39,6 +71,7 @@ class Question extends Component {
     } else if (this.props.questionData.type === 'boolean') {
       this.props.onSubmitAnswer(this.state.booleanOption);
     }
+    this.restartTimer();
   };
 
   renderQuestion = (question) => {
