@@ -3,17 +3,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import shuffle from '../utils/shuffle';
-import cleanupText from '../utils/cleanText';
-import BooleanChoice from './BooleanChoice';
+import RenderedQuestion from './RenderedQuestion';
 
 class Question extends Component {
   state = {
     booleanOption: 'true',
     multivalueOption: '',
-    counter: 5,
+    counter: 29,
+    questionOptions: null,
   };
 
   componentDidMount() {
+    if (this.props.questionData.type === 'multiple') {
+      this.setState(() => ({
+        questionOptions: this.createOptions(this.props.questionData),
+      }));
+    }
     this.interval = setInterval(() => this.handleTimerTick(), 1000);
   }
 
@@ -23,7 +28,6 @@ class Question extends Component {
 
   handleTimerTick = () => {
     if (this.state.counter === 0) {
-      console.log('hit zero!');
       this.stopTimer();
     }
     console.log(this.state.counter);
@@ -41,6 +45,7 @@ class Question extends Component {
   restartTimer = () => {
     this.setState(() => ({
       counter: 5,
+      questionOptions: this.createOptions(this.props.questionData),
     }));
     clearInterval(this.interval);
     this.interval = setInterval(() => this.handleTimerTick(), 1000);
@@ -59,10 +64,6 @@ class Question extends Component {
   };
 
   handleSubmit = (event) => {
-    console.log('handleSubmit! yay! 😄  😜');
-
-    // reset counter back to initial amount
-
     if (event) {
       event.preventDefault();
     }
@@ -71,48 +72,8 @@ class Question extends Component {
     } else if (this.props.questionData.type === 'boolean') {
       this.props.onSubmitAnswer(this.state.booleanOption);
     }
+    // reset counter back to initial amount
     this.restartTimer();
-  };
-
-  renderQuestion = (question) => {
-    if (question.type === 'boolean') {
-      return (
-        <div>
-          <p>{cleanupText(question.question)}</p>
-          <form onSubmit={this.handleSubmit}>
-            <BooleanChoice
-              value
-              checked={this.state.booleanOption === 'true'}
-              label="True"
-              type="radio"
-              onChange={this.handleOptionChange}
-            />
-            <BooleanChoice
-              value={false}
-              label="False"
-              checked={this.state.booleanOption === 'false'}
-              type="radio"
-              onChange={this.handleOptionChange}
-            />
-            <button type="submit">Submit answer</button>
-          </form>
-        </div>
-      );
-    }
-    if (question.type === 'multiple') {
-      return (
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            {cleanupText(question.question)}
-            <select value={this.state.multivalueOption} onChange={this.handleOptionChange}>
-              {this.createOptions(question)}
-            </select>
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-      );
-    }
-    return '';
   };
 
   createOptions = (object) => {
@@ -135,7 +96,14 @@ class Question extends Component {
   render() {
     return (
       <div>
-        <div>{this.renderQuestion(this.props.questionData)}</div>
+        <RenderedQuestion
+          handleSubmit={this.handleSubmit}
+          booleanOption={this.state.booleanOption}
+          multivalueOption={this.state.multivalueOption}
+          handleOptionChange={this.handleOptionChange}
+          question={this.props.questionData}
+          options={this.state.questionOptions}
+        />
       </div>
     );
   }
