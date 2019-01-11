@@ -44,7 +44,7 @@ class Question extends Component {
 
   restartTimer = () => {
     this.setState(() => ({
-      counter: 5,
+      counter: 29,
       questionOptions: this.createOptions(this.props.questionData),
     }));
     clearInterval(this.interval);
@@ -104,6 +104,7 @@ class Question extends Component {
           question={this.props.questionData}
           options={this.state.questionOptions}
         />
+        Time left for this question: {this.state.counter}
       </div>
     );
   }
