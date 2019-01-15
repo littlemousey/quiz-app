@@ -9,13 +9,14 @@ class Question extends Component {
   state = {
     booleanOption: 'true',
     multivalueOption: '',
-    counter: 2,
+    counter: 29,
     questionOptions: null,
   };
 
   componentDidMount() {
+    // apparently componentDidMount is only triggered once
     // initialize the counter again;
-    if (this.state.counter === 2 && !this.interval) {
+    if (this.state.counter === 29 && !this.interval) {
       this.startTimer();
     }
 
@@ -32,8 +33,8 @@ class Question extends Component {
       this.handleSubmit();
       clearInterval(this.interval); // stop the timer
 
-      // set the counter to 2
-      this.setState(() => ({ counter: 2, questionOptions: this.createOptions(this.props.questionData) }));
+      // set the counter to 29
+      this.setState(() => ({ counter: 29, questionOptions: this.createOptions(this.props.questionData) }));
       this.startTimer();
     }
     return true;
@@ -44,10 +45,8 @@ class Question extends Component {
   }
 
   startTimer = () => {
-    console.log('starting timer');
     this.interval = setInterval(() => {
       this.setState((prevState) => ({ counter: prevState.counter - 1 }));
-      console.log(this.state.counter);
     }, 1000);
   };
 
