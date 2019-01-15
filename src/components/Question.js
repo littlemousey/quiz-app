@@ -9,46 +9,46 @@ class Question extends Component {
   state = {
     booleanOption: 'true',
     multivalueOption: '',
-    counter: 29,
+    counter: 2,
     questionOptions: null,
   };
 
   componentDidMount() {
+    // initialize the counter again;
+    if (this.state.counter === 2 && !this.interval) {
+      this.startTimer();
+    }
+
     if (this.props.questionData.type === 'multiple') {
       this.setState(() => ({
         questionOptions: this.createOptions(this.props.questionData),
       }));
     }
-    this.interval = setInterval(() => this.handleTimerTick(), 1000);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // when the timer hits zero
+    if (nextState.counter === 0) {
+      this.handleSubmit();
+      clearInterval(this.interval); // stop the timer
+
+      // set the counter to 2
+      this.setState(() => ({ counter: 2, questionOptions: this.createOptions(this.props.questionData) }));
+      this.startTimer();
+    }
+    return true;
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
-  handleTimerTick = () => {
-    if (this.state.counter === 0) {
-      this.stopTimer();
-    }
-    console.log(this.state.counter);
-    this.setState((prevState) => ({
-      counter: prevState.counter - 1,
-    }));
-  };
-
-  stopTimer = () => {
-    console.log('Timer Stopping');
-    clearInterval(this.interval);
-    this.handleSubmit(false);
-  };
-
-  restartTimer = () => {
-    this.setState(() => ({
-      counter: 29,
-      questionOptions: this.createOptions(this.props.questionData),
-    }));
-    clearInterval(this.interval);
-    this.interval = setInterval(() => this.handleTimerTick(), 1000);
+  startTimer = () => {
+    console.log('starting timer');
+    this.interval = setInterval(() => {
+      this.setState((prevState) => ({ counter: prevState.counter - 1 }));
+      console.log(this.state.counter);
+    }, 1000);
   };
 
   handleOptionChange = (changeEvent) => {
@@ -72,8 +72,6 @@ class Question extends Component {
     } else if (this.props.questionData.type === 'boolean') {
       this.props.onSubmitAnswer(this.state.booleanOption);
     }
-    // reset counter back to initial amount
-    this.restartTimer();
   };
 
   createOptions = (object) => {
