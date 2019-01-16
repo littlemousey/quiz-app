@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Container, Divider } from 'semantic-ui-react';
 import RegisterName from './components/RegisterName';
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -32,24 +33,24 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <div className="App">
-          <Header name={this.state.name} />
-          {!this.state.name && <RegisterName setName={(string) => this.setName(string)} />}
-          {this.state.name && this.state.questionsLeft > -1 && <Game onSubmitAnswer={this.processScore} />}
-          {this.state.name && this.state.questionsLeft < 0 && (
-            <Results questionsRight={this.state.questionsRight} recordedQuestions={this.state.recordedQuestions} />
-          )}
-          {this.state.name && this.state.questionsLeft > -1 && (
-            <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.state.questionsLeft} />
-          )}
-
-          {/* <Link to="/">Home</Link> */}
-          <Link to="/corgi">Corgi</Link>
-          {/* <Route exact path="/" component={App} /> */}
-          <Route path="/corgi" component={EasterEgg} />
-        </div>
-      </Router>
+      <Container>
+        <Router>
+          <div className="App">
+            <Header name={this.state.name} />
+            {!this.state.name && <RegisterName setName={(string) => this.setName(string)} />}
+            {this.state.name && this.state.questionsLeft > -1 && <Game onSubmitAnswer={this.processScore} />}
+            {this.state.name && this.state.questionsLeft < 0 && (
+              <Results questionsRight={this.state.questionsRight} recordedQuestions={this.state.recordedQuestions} />
+            )}
+            {this.state.name && this.state.questionsLeft > -1 && (
+              <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.state.questionsLeft} />
+            )}
+            <Divider horizontal>In need of a Corgi?</Divider>
+            <Link to="/corgi">Corgi</Link>
+            <Route path="/corgi" component={EasterEgg} />
+          </div>
+        </Router>
+      </Container>
     );
   }
 }

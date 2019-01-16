@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Input, Container } from 'semantic-ui-react';
 
 class RegisterName extends Component {
   state = {
@@ -19,14 +20,21 @@ class RegisterName extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          What is your name?
-          <br />
-          <input type="text" name="registration" value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+      <Container>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            What is your name?
+            <br />
+            <Input
+              action="Submit"
+              placeholder="Name"
+              name="registration"
+              value={this.state.value}
+              onChange={this.handleChange}
+            />
+          </label>
+        </form>
+      </Container>
     );
   }
 }
