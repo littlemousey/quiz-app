@@ -7,15 +7,14 @@ import triviaService from '../services/getQuestionsData';
 import gifImage from '../img/loading.gif';
 
 class Game extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      questions: createNewRandomizedArray([], 10),
-      currentQuestion: generateRandomNumber(0, 10),
-      answeredQuestions: [],
-      loading: true,
-    };
+  state = {
+    questions: createNewRandomizedArray([], 10),
+    currentQuestion: generateRandomNumber(0, 10),
+    answeredQuestions: [],
+    loading: true,
+  };
 
+  componentWillMount() {
     triviaService.getQuestions().then((opentdbData) => {
       this.setState({ questions: createNewRandomizedArray(opentdbData.results, 10) });
     });

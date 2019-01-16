@@ -32,21 +32,31 @@ class App extends Component {
   };
 
   render() {
+    const register = !this.state.name && <RegisterName setName={(string) => this.setName(string)} />;
+    let mainView;
+    if (this.state.name && this.state.questionsLeft > -1) {
+      mainView = <Game onSubmitAnswer={this.processScore} />;
+    } else if (this.state.name && this.state.questionsLeft < 0) {
+      mainView = (
+        <Results questionsRight={this.state.questionsRight} recordedQuestions={this.state.recordedQuestions} />
+      );
+    }
+    const footer = this.state.name && this.state.questionsLeft > -1 && (
+      <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.state.questionsLeft} />
+    );
+
     return (
       <Container>
         <Router>
           <div className="App">
             <Header name={this.state.name} />
-            {!this.state.name && <RegisterName setName={(string) => this.setName(string)} />}
-            {this.state.name && this.state.questionsLeft > -1 && <Game onSubmitAnswer={this.processScore} />}
-            {this.state.name && this.state.questionsLeft < 0 && (
-              <Results questionsRight={this.state.questionsRight} recordedQuestions={this.state.recordedQuestions} />
-            )}
-            {this.state.name && this.state.questionsLeft > -1 && (
-              <Footer amountOfQuestionsRight={this.state.questionsRight} questionsLeft={this.state.questionsLeft} />
-            )}
+            {register}
+            {mainView}
+            {footer}
             <Divider horizontal>In need of a Corgi?</Divider>
-            <Link to="/corgi">Corgi</Link>
+            <Link className="link" to="/corgi">
+              Click for a Corgi
+            </Link>
             <Route path="/corgi" component={EasterEgg} />
           </div>
         </Router>
