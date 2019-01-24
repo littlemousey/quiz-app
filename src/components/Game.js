@@ -66,7 +66,7 @@ class Game extends Component {
     }
     return (
       <div>
-        <img className="loading" src={gifImage} width="100px" height="100px" alt="loading..." />
+        <div className="ui active centered inline loader" />
       </div>
     );
   }
