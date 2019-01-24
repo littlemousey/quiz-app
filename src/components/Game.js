@@ -4,7 +4,6 @@ import generateRandomNumber from '../utils/random';
 import Question from './Question';
 import createNewRandomizedArray from '../utils/randomizedArray';
 import triviaService from '../services/getQuestionsData';
-import gifImage from '../img/loading.gif';
 
 class Game extends Component {
   state = {
