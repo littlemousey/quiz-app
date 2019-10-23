@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import generateRandomNumber from '../utils/random';
 import Question from './Question';
 import createNewRandomizedArray from '../utils/randomizedArray';
-import triviaService from '../services/getQuestionsData';
+import { getQuestions } from '../services/getQuestionsData';
 
 class Game extends Component {
   state = {
@@ -14,7 +14,7 @@ class Game extends Component {
   };
 
   componentWillMount() {
-    triviaService.getQuestions().then((opentdbData) => {
+    getQuestions().then((opentdbData) => {
       this.setState({ questions: createNewRandomizedArray(opentdbData.results, 10) });
     });
   }
